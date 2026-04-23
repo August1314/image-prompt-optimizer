@@ -1,0 +1,64 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#6366f1"/>
+      <stop offset="50%" style="stop-color:#8b5cf6"/>
+      <stop offset="100%" style="stop-color:#a855f7"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#f59e0b"/>
+      <stop offset="100%" style="stop-color:#f97316"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  
+  <!-- Decorative grid pattern -->
+  <g opacity="0.1">
+    <line x1="0" y1="157.5" x2="1200" y2="157.5" stroke="white" stroke-width="1"/>
+    <line x1="0" y1="315" x2="1200" y2="315" stroke="white" stroke-width="1"/>
+    <line x1="0" y1="472.5" x2="1200" y2="472.5" stroke="white" stroke-width="1"/>
+    <line x1="300" y1="0" x2="300" y2="630" stroke="white" stroke-width="1"/>
+    <line x1="600" y1="0" x2="600" y2="630" stroke="white" stroke-width="1"/>
+    <line x1="900" y1="0" x2="900" y2="630" stroke="white" stroke-width="1"/>
+  </g>
+  
+  <!-- Decorative circles -->
+  <circle cx="100" cy="100" r="80" fill="white" opacity="0.05"/>
+  <circle cx="1100" cy="530" r="120" fill="white" opacity="0.05"/>
+  <circle cx="950" cy="150" r="60" fill="white" opacity="0.08"/>
+  
+  <!-- Main icon - Magic wand with sparkles -->
+  <g transform="translate(520, 180)">
+    <!-- Wand -->
+    <rect x="60" y="40" width="140" height="20" rx="10" fill="white" transform="rotate(45, 80, 50)"/>
+    <!-- Sparkles -->
+    <g fill="url(#accent)">
+      <polygon points="100,20 103,30 113,30 105,37 108,47 100,40 92,47 95,37 87,30 97,30" transform="scale(1.2)"/>
+      <polygon points="50,60 52,66 58,66 53,70 55,76 50,72 45,76 47,70 42,66 48,66" transform="scale(1.3)"/>
+      <polygon points="140,50 142,56 148,56 143,60 145,66 140,62 135,66 137,60 132,56 138,56" transform="scale(1.2)"/>
+    </g>
+  </g>
+  
+  <!-- Title -->
+  <text x="600" y="380" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="56" font-weight="700" fill="white">
+    Image Prompt Optimizer
+  </text>
+  
+  <!-- Subtitle -->
+  <text x="600" y="440" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="24" fill="white" opacity="0.9">
+    Transform rough ideas into polished prompts for AI image generators
+  </text>
+  
+  <!-- Supported models -->
+  <g transform="translate(600, 500)" font-family="system-ui, -apple-system, sans-serif" font-size="16" fill="white" opacity="0.7" text-anchor="middle">
+    <text x="-180" y="0">Midjourney</text>
+    <text x="-60" y="0">DALL·E</text>
+    <text x="60" y="0">Flux</text>
+    <text x="180" y="0">Stable Diffusion</text>
+  </g>
+  
+  <!-- Bottom bar -->
+  <rect x="0" y="610" width="1200" height="20" fill="url(#accent)"/>
+</svg>
