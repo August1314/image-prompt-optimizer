@@ -1,5 +1,6 @@
 import type { Connect } from 'vite'
 import type { ClarificationAnswer } from './types'
+import { checkServerSafety } from './safety.server'
 
 /**
  * Deterministic mock API for local development without an OpenAI API key.
@@ -46,6 +47,67 @@ function mockOptimizedPrompt(prompt: string, answers: ClarificationAnswer[]) {
   }
 }
 
+interface MockOptimizeRequest {
+  prompt: string
+  answers: ClarificationAnswer[]
+}
+
+interface MockOptimizeResponse {
+  statusCode: number
+  body: Record<string, unknown>
+}
+
+function isClarificationAnswer(value: unknown): value is ClarificationAnswer {
+  return (
+    typeof value === 'object' &&
+    value !== null &&
+    typeof (value as ClarificationAnswer).question === 'string' &&
+    typeof (value as ClarificationAnswer).answer === 'string'
+  )
+}
+
+function isMockOptimizeRequest(body: unknown): body is MockOptimizeRequest {
+  if (typeof body !== 'object' || body === null) {
+    return false
+  }
+
+  const candidate = body as Record<string, unknown>
+
+  return (
+    typeof candidate.prompt === 'string' &&
+    Array.isArray(candidate.answers) &&
+    candidate.answers.every(isClarificationAnswer)
+  )
+}
+
+export function createMockOptimizeResponse(body: unknown): MockOptimizeResponse {
+  if (!isMockOptimizeRequest(body)) {
+    return {
+      statusCode: 400,
+      body: { error: 'Invalid request body. Expected { prompt: string, answers: array }.' },
+    }
+  }
+
+  const { prompt, answers } = body
+  const fullText = `${prompt} ${answers.map((answer) => answer.answer).join(' ')}`
+  const safetyResult = checkServerSafety(fullText)
+
+  if (!safetyResult.safe) {
+    return {
+      statusCode: 422,
+      body: { error: safetyResult.reason ?? 'Request rejected by safety policy.' },
+    }
+  }
+
+  const isFirstPass = answers.length === 0 || answers.every((answer) => !answer.answer.trim())
+  const result = isFirstPass ? mockClarification(prompt) : mockOptimizedPrompt(prompt, answers)
+
+  return {
+    statusCode: 200,
+    body: result,
+  }
+}
+
 export function mockApiMiddleware(): Connect.NextHandleFunction {
   return (req, res, next) => {
     if (req.url !== '/api/optimize' || req.method !== 'POST') {
@@ -60,15 +122,11 @@ export function mockApiMiddleware(): Connect.NextHandleFunction {
     req.on('end', () => {
       try {
         const parsed = JSON.parse(body)
-        const prompt: string = parsed.prompt || ''
-        const answers: ClarificationAnswer[] = parsed.answers || []
-
-        const isFirstPass = !answers || answers.length === 0 || answers.every((a: ClarificationAnswer) => !a.answer?.trim())
-        const result = isFirstPass ? mockClarification(prompt) : mockOptimizedPrompt(prompt, answers)
+        const result = createMockOptimizeResponse(parsed)
 
         res.setHeader('Content-Type', 'application/json')
-        res.statusCode = 200
-        res.end(JSON.stringify(result))
+        res.statusCode = result.statusCode
+        res.end(JSON.stringify(result.body))
       } catch {
         res.statusCode = 400
         res.end(JSON.stringify({ error: 'Invalid JSON body.' }))
