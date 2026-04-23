@@ -63,6 +63,14 @@ function App() {
     setClarificationAnswers([])
   }
 
+  const handleEditPrompt = () => {
+    // Keep the initial prompt, clear results and go back to input
+    setResult(null)
+    setError(null)
+    setClarificationAnswers([])
+    setStep('input')
+  }
+
   return (
     <div className="container">
       <header style={{ textAlign: 'center', marginBottom: '2rem', paddingTop: '2rem' }}>
@@ -81,7 +89,7 @@ function App() {
       )}
 
       {step === 'input' && (
-        <PromptInput onSubmit={handleInitialSubmit} isLoading={isLoading} />
+        <PromptInput onSubmit={handleInitialSubmit} isLoading={isLoading} initialPrompt={initialPrompt} />
       )}
 
       {step === 'clarification' && result && (
@@ -90,6 +98,7 @@ function App() {
           answers={clarificationAnswers}
           onSubmit={handleClarificationSubmit}
           isLoading={isLoading}
+          onBack={handleEditPrompt}
         />
       )}
 
@@ -97,6 +106,7 @@ function App() {
         <ResultStep
           result={result}
           onReset={handleReset}
+          onEditPrompt={handleEditPrompt}
         />
       )}
     </div>

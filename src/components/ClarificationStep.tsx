@@ -6,9 +6,10 @@ interface Props {
   answers: ClarificationAnswer[]
   onSubmit: (answers: ClarificationAnswer[]) => Promise<void>
   isLoading: boolean
+  onBack?: () => void
 }
 
-function ClarificationStep({ questions, answers, onSubmit, isLoading }: Props) {
+function ClarificationStep({ questions, answers, onSubmit, isLoading, onBack }: Props) {
   const [localAnswers, setLocalAnswers] = useState<ClarificationAnswer[]>(answers)
   const [error, setError] = useState<string | null>(null)
 
@@ -61,12 +62,19 @@ function ClarificationStep({ questions, answers, onSubmit, isLoading }: Props) {
             {error}
           </div>
         )}
-        <div style={{ display: 'flex', gap: '1rem', justifyContent: 'space-between' }}>
-          <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', alignSelf: 'center' }}>
-            {allAnswered
-              ? 'All questions answered!'
-              : `${localAnswers.filter((a) => a.answer.trim()).length}/${questions.length} answered`}
-          </p>
+        <div style={{ display: 'flex', gap: '1rem', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div style={{ display: 'flex', gap: '0.75rem' }}>
+            {onBack && (
+              <button type="button" className="btn btn-secondary" onClick={onBack}>
+                ← Back
+              </button>
+            )}
+            <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', alignSelf: 'center' }}>
+              {allAnswered
+                ? 'All questions answered!'
+                : `${localAnswers.filter((a) => a.answer.trim()).length}/${questions.length} answered`}
+            </p>
+          </div>
           <button
             type="submit"
             className="btn btn-primary"

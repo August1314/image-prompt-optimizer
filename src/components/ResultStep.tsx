@@ -23,9 +23,10 @@ function parseModelBadges(advice: string): ModelBadge[] {
 interface Props {
   result: OptimizationResult
   onReset: () => void
+  onEditPrompt: () => void
 }
 
-function ResultStep({ result, onReset }: Props) {
+function ResultStep({ result, onReset, onEditPrompt }: Props) {
   const [copiedField, setCopiedField] = useState<string | null>(null)
   const matchedBadges = parseModelBadges(result.modelAdvice)
 
@@ -123,8 +124,11 @@ function ResultStep({ result, onReset }: Props) {
 
       {/* Actions */}
       <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', marginTop: '1rem' }}>
-        <button className="btn btn-secondary" onClick={onReset}>
-          Create Another Prompt
+        <button className="btn btn-secondary" onClick={onEditPrompt}>
+          ✏️ Edit Prompt
+        </button>
+        <button className="btn btn-primary" onClick={onReset}>
+          🔄 New Prompt
         </button>
       </div>
     </div>

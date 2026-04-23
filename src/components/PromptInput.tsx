@@ -4,10 +4,11 @@ import { checkSafety } from '../lib/safety'
 interface Props {
   onSubmit: (prompt: string) => Promise<void>
   isLoading: boolean
+  initialPrompt?: string
 }
 
-function PromptInput({ onSubmit, isLoading }: Props) {
-  const [prompt, setPrompt] = useState('')
+function PromptInput({ onSubmit, isLoading, initialPrompt = '' }: Props) {
+  const [prompt, setPrompt] = useState(initialPrompt)
   const [error, setError] = useState<string | null>(null)
 
   const handleSubmit = async (e: React.FormEvent) => {
