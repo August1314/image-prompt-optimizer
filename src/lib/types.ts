@@ -11,4 +11,6 @@ export interface OptimizationResult {
   negativePrompt: string
   modelAdvice: string
   clarificationQuestions?: string[]
+  _mock?: boolean
+  _notice?: string
 }

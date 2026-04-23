@@ -89,4 +89,17 @@ describe('ResultStep', () => {
     expect(screen.getByText('Negative Prompt')).toBeInTheDocument()
     expect(screen.getByText('Model Recommendations')).toBeInTheDocument()
   })
+
+  it('shows mock mode notice when _mock flag is present', () => {
+    renderResultStep({
+      result: createResult({ _mock: true, _notice: 'Running in mock mode for testing.' }),
+    })
+    expect(screen.getByText('Mock Mode')).toBeInTheDocument()
+    expect(screen.getByText(/Running in mock mode for testing./)).toBeInTheDocument()
+  })
+
+  it('does not show mock mode notice when _mock flag is absent', () => {
+    renderResultStep()
+    expect(screen.queryByText('Mock Mode')).not.toBeInTheDocument()
+  })
 })

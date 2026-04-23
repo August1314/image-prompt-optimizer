@@ -51,6 +51,27 @@ function ResultStep({ result, onReset, onEditPrompt }: Props) {
 
   return (
     <div>
+      {/* Mock mode notice */}
+      {result._mock && result._notice && (
+        <div
+          className="card"
+          style={{
+            marginBottom: '1.5rem',
+            background: '#fef3c7',
+            border: '1px solid #fbbf24',
+            color: '#92400e',
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: 600 }}>
+            <span>⚠️</span>
+            <span>Mock Mode</span>
+          </div>
+          <p style={{ margin: '0.5rem 0 0', fontSize: '0.875rem' }}>
+            {result._notice}
+          </p>
+        </div>
+      )}
+
       <div className="success" style={{ marginBottom: '1.5rem' }}>
         Your optimized prompts are ready! Use them with your favorite AI image generator.
       </div>
