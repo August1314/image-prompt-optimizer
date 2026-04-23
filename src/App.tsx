@@ -3,18 +3,10 @@ import PromptInput from './components/PromptInput'
 import ClarificationStep from './components/ClarificationStep'
 import ResultStep from './components/ResultStep'
 import { optimizePrompt } from './lib/prompt-optimizer'
+import type { ClarificationAnswer, OptimizationResult } from './lib/types'
 
-export interface ClarificationAnswer {
-  question: string
-  answer: string
-}
-
-export interface OptimizationResult {
-  optimizedPrompt: string
-  negativePrompt: string
-  modelAdvice: string
-  clarificationQuestions?: string[]
-}
+// Re-export for backwards compatibility with components that import from App
+export type { ClarificationAnswer, OptimizationResult }
 
 type Step = 'input' | 'clarification' | 'result'
 

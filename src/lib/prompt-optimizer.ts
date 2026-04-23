@@ -1,4 +1,4 @@
-import { ClarificationAnswer, OptimizationResult } from '../App'
+import type { ClarificationAnswer, OptimizationResult } from './types'
 
 const API_BASE = '/api'
 
