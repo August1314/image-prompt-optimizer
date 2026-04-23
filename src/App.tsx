@@ -3,12 +3,13 @@ import PromptInput from './components/PromptInput'
 import ClarificationStep from './components/ClarificationStep'
 import ResultStep from './components/ResultStep'
 import LoadingSkeleton from './components/LoadingSkeleton'
+import ErrorBoundary from './components/ErrorBoundary'
 import { optimizePrompt } from './lib/prompt-optimizer'
 import type { ClarificationAnswer, OptimizationResult } from './lib/types'
 
 type Step = 'input' | 'clarification' | 'result'
 
-function App() {
+function AppContent() {
   const [step, setStep] = useState<Step>('input')
   const [initialPrompt, setInitialPrompt] = useState('')
   const [isLoading, setIsLoading] = useState(false)
@@ -116,4 +117,10 @@ function App() {
   )
 }
 
-export default App
+export default function App() {
+  return (
+    <ErrorBoundary>
+      <AppContent />
+    </ErrorBoundary>
+  )
+}
