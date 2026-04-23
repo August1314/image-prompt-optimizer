@@ -1,27 +1,27 @@
 import { describe, it, expect } from 'vitest'
-import type { ReactNode } from 'react'
+import { render, screen } from '@testing-library/react'
+import LoadingSkeleton from '../LoadingSkeleton'
 
-/**
- * LoadingSkeleton structural validation.
- * Since @testing-library/react is not installed, we verify the component
- * module exports and type contract rather than rendering.
- */
-
-// Verify the component can be imported (this file runs as .test.tsx via vitest)
-// The import at the top already validates the module loads without error.
-describe('LoadingSkeleton — module and type contract', () => {
-  it('exports a default function component', async () => {
-    const mod = await import('../LoadingSkeleton')
-    expect(mod.default).toBeDefined()
-    expect(typeof mod.default).toBe('function')
+describe('LoadingSkeleton', () => {
+  it('renders clarification skeleton with aria-busy', () => {
+    render(<LoadingSkeleton step="clarification" />)
+    expect(screen.getByLabelText(/loading results/i)).toHaveAttribute('aria-busy', 'true')
   })
 
-  it('accepts step prop with "clarification" or "result"', async () => {
-    const mod = await import('../LoadingSkeleton')
-    const Component = mod.default as (props: { step: 'clarification' | 'result' }) => ReactNode
+  it('renders result skeleton with aria-busy', () => {
+    render(<LoadingSkeleton step="result" />)
+    expect(screen.getByLabelText(/loading results/i)).toHaveAttribute('aria-busy', 'true')
+  })
 
-    // Type check: both values are valid at runtime
-    expect(() => Component({ step: 'clarification' })).not.toThrow()
-    expect(() => Component({ step: 'result' })).not.toThrow()
+  it('renders skeleton lines in clarification step', () => {
+    render(<LoadingSkeleton step="clarification" />)
+    const skeleton = screen.getByLabelText(/loading results/i)
+    expect(skeleton.querySelectorAll('.skeleton-line').length).toBeGreaterThanOrEqual(3)
+  })
+
+  it('renders skeleton lines in result step', () => {
+    render(<LoadingSkeleton step="result" />)
+    const skeleton = screen.getByLabelText(/loading results/i)
+    expect(skeleton.querySelectorAll('.skeleton-line').length).toBeGreaterThanOrEqual(3)
   })
 })
