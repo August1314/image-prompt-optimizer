@@ -62,6 +62,6 @@ describe('createMockOptimizeResponse', () => {
     })
     expect(result.body.optimizedPrompt).toContain('cinematic portrait of a violinist in heavy rain')
     expect(result.body.negativePrompt).toContain('blurry')
-    expect(result.body.modelAdvice).toContain('Midjourney v6')
+    expect(result.body.modelAdvice).toContain('Midjourney')
   })
 })

@@ -37,7 +37,7 @@ function mockOptimizedPrompt(prompt: string, answers: ClarificationAnswer[]) {
   const answersSummary = answers.map((a) => a.answer).join(', ')
   const optimized = `A highly detailed ${prompt}, ${answersSummary}, dramatic lighting, intricate details, professional composition, 8K resolution, masterpiece quality`
   const negative = 'blurry, low quality, distorted, deformed, ugly, bad anatomy, extra limbs, watermark, text, signature, oversaturated, cropped, worst quality, low resolution'
-  const modelAdvice = 'This prompt works well with Midjourney v6 using --ar 16:9 --v 6.0. For DALL-E 3, keep the description as-is. For Stable Diffusion, consider adding "score_9, score_8_up" quality tags.'
+  const modelAdvice = 'Midjourney: works great with --ar 16:9 --v 6.0 — add cinematic lighting tags for best results. | DALL-E 3: keep descriptions concise and natural-language style. | Stable Diffusion: append quality tags like "score_9, score_8_up, masterpiece" for SDXL. | Flux: use detailed, structured descriptions with style keywords.'
 
   return {
     optimizedPrompt: optimized,

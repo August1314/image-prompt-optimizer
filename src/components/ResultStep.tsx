@@ -1,6 +1,25 @@
 import { useState } from 'react'
 import type { OptimizationResult } from '../lib/types'
 
+interface ModelBadge {
+  name: string
+  color: string
+  icon: string
+}
+
+const MODEL_BADGES: ModelBadge[] = [
+  { name: 'Midjourney', color: '#5865F2', icon: '🎨' },
+  { name: 'DALL·E', color: '#10A37F', icon: '🖼️' },
+  { name: 'Stable Diffusion', color: '#9333EA', icon: '⚡' },
+  { name: 'Flux', color: '#F97316', icon: '✨' },
+]
+
+function parseModelBadges(advice: string): ModelBadge[] {
+  return MODEL_BADGES.filter((badge) =>
+    advice.toLowerCase().includes(badge.name.toLowerCase())
+  )
+}
+
 interface Props {
   result: OptimizationResult
   onReset: () => void
@@ -8,6 +27,7 @@ interface Props {
 
 function ResultStep({ result, onReset }: Props) {
   const [copiedField, setCopiedField] = useState<string | null>(null)
+  const matchedBadges = parseModelBadges(result.modelAdvice)
 
   const copyToClipboard = async (text: string, field: string) => {
     try {
@@ -33,6 +53,32 @@ function ResultStep({ result, onReset }: Props) {
       <div className="success" style={{ marginBottom: '1.5rem' }}>
         Your optimized prompts are ready! Use them with your favorite AI image generator.
       </div>
+
+      {/* Model recommendation badges */}
+      {matchedBadges.length > 0 && (
+        <div className="card" style={{ marginBottom: '1.5rem' }}>
+          <div className="card-header">Recommended Models</div>
+          <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
+            {matchedBadges.map((badge) => (
+              <span
+                key={badge.name}
+                className="badge"
+                style={{
+                  background: badge.color + '22',
+                  color: badge.color,
+                  border: `1px solid ${badge.color}55`,
+                  fontSize: '0.875rem',
+                  padding: '0.4rem 0.85rem',
+                  borderRadius: '9999px',
+                }}
+              >
+                <span style={{ marginRight: '0.4rem' }}>{badge.icon}</span>
+                {badge.name}
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Optimized Prompt */}
       <div className="card">
