@@ -5,9 +5,6 @@ import ResultStep from './components/ResultStep'
 import { optimizePrompt } from './lib/prompt-optimizer'
 import type { ClarificationAnswer, OptimizationResult } from './lib/types'
 
-// Re-export for backwards compatibility with components that import from App
-export type { ClarificationAnswer, OptimizationResult }
-
 type Step = 'input' | 'clarification' | 'result'
 
 function App() {

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { OptimizationResult } from '../App'
+import type { OptimizationResult } from '../lib/types'
 
 interface Props {
   result: OptimizationResult
@@ -72,19 +72,6 @@ function ResultStep({ result, onReset }: Props) {
         </div>
         <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)' }}>
           Suggested settings and model for best results with this type of prompt.
-        </p>
-      </div>
-
-      {/* Stripe placeholder */}
-      <div className="card" style={{ textAlign: 'center', borderStyle: 'dashed' }}>
-        <p style={{ color: 'var(--text-secondary)', marginBottom: '1rem' }}>
-          Want more features? Save and manage your prompts.
-        </p>
-        <button className="btn btn-primary" disabled>
-          Premium (Coming Soon)
-        </button>
-        <p style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginTop: '0.5rem' }}>
-          Stripe integration placeholder
         </p>
       </div>
 

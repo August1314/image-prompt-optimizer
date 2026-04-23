@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { ClarificationAnswer } from '../App'
+import type { ClarificationAnswer } from '../lib/types'
 
 interface Props {
   questions: string[]
