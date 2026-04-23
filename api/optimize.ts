@@ -1,6 +1,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import OpenAI from 'openai'
 import { checkServerSafety } from '../src/lib/safety.server'
+import { runMockOptimizer } from '../src/lib/mock-optimizer'
 import type { ClarificationAnswer } from '../src/lib/types'
 
 interface OptimizeRequest {
@@ -43,8 +44,16 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return res.status(422).json({ error: safetyResult.reason })
   }
 
+  // If no OPENAI_API_KEY is configured, fall back to deterministic mock responses.
+  // This allows the app to remain functional in preview environments or when
+  // the key has not yet been provisioned, while clearly signaling mock mode.
   if (!process.env.OPENAI_API_KEY) {
-    return res.status(500).json({ error: 'Server configuration error: API key not set.' })
+    const result = runMockOptimizer(prompt, answers)
+    return res.status(200).json({
+      ...result,
+      _mock: true,
+      _notice: 'Running in mock mode because OPENAI_API_KEY is not configured. Set the environment variable to enable real AI optimization.',
+    })
   }
 
   try {
