@@ -16,8 +16,8 @@ describe('Edit Prompt Flow — mock API contract', () => {
     })
 
     expect(result.statusCode).toBe(200)
-    expect(Array.isArray(result.body.clarificationQuestions)).toBe(true)
-    expect(result.body.clarificationQuestions.length).toBeGreaterThan(0)
+    expect(Array.isArray((result.body as { clarificationQuestions?: unknown[] }).clarificationQuestions)).toBe(true)
+    expect(((result.body as { clarificationQuestions?: unknown[] }).clarificationQuestions?.length ?? 0)).toBeGreaterThan(0)
   })
 
   it('second pass with answers returns optimized prompt (edit cycle safe)', () => {
