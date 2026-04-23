@@ -212,3 +212,39 @@ body {
   background: var(--accent);
   color: white;
 }
+
+/* Loading Skeleton */
+.skeleton-line {
+  background: linear-gradient(
+    90deg,
+    var(--bg-tertiary) 25%,
+    var(--border) 37%,
+    var(--bg-tertiary) 63%
+  );
+  background-size: 400% 100%;
+  animation: skeleton-shimmer 1.4s ease infinite;
+}
+
+@keyframes skeleton-shimmer {
+  0% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0 50%;
+  }
+}
+
+.loading-skeleton {
+  animation: skeleton-fadein 0.3s ease;
+}
+
+@keyframes skeleton-fadein {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

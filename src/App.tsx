@@ -2,6 +2,7 @@ import { useState } from 'react'
 import PromptInput from './components/PromptInput'
 import ClarificationStep from './components/ClarificationStep'
 import ResultStep from './components/ResultStep'
+import LoadingSkeleton from './components/LoadingSkeleton'
 import { optimizePrompt } from './lib/prompt-optimizer'
 import type { ClarificationAnswer, OptimizationResult } from './lib/types'
 
@@ -88,11 +89,13 @@ function App() {
         </div>
       )}
 
-      {step === 'input' && (
+      {isLoading && <LoadingSkeleton step={step === 'clarification' ? 'clarification' : 'result'} />}
+
+      {!isLoading && step === 'input' && (
         <PromptInput onSubmit={handleInitialSubmit} isLoading={isLoading} initialPrompt={initialPrompt} />
       )}
 
-      {step === 'clarification' && result && (
+      {!isLoading && step === 'clarification' && result && (
         <ClarificationStep
           questions={result.clarificationQuestions || []}
           answers={clarificationAnswers}
@@ -102,7 +105,7 @@ function App() {
         />
       )}
 
-      {step === 'result' && result && (
+      {!isLoading && step === 'result' && result && (
         <ResultStep
           result={result}
           onReset={handleReset}
