@@ -46,7 +46,10 @@ function PromptInput({ onSubmit, isLoading, initialPrompt = '' }: Props) {
             {error}
           </div>
         )}
-        <div style={{ marginTop: '1rem', display: 'flex', gap: '1rem', justifyContent: 'flex-end' }}>
+        <div style={{ marginTop: '1rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
+            {prompt.length} characters
+          </span>
           <button
             type="submit"
             className="btn btn-primary"
