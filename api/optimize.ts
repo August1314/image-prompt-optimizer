@@ -1,15 +1,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import OpenAI from 'openai'
 import { checkServerSafety } from '../src/lib/safety.server'
-
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-})
-
-interface ClarificationAnswer {
-  question: string
-  answer: string
-}
+import type { ClarificationAnswer } from '../src/lib/types'
 
 interface OptimizeRequest {
   prompt: string
@@ -76,7 +68,8 @@ Respond ONLY with valid JSON in this exact format, no markdown or extra text:
 
 If the user's idea is already very detailed and specific enough, you may return an empty array for clarificationQuestions.`
 
-      const completion = await openai.chat.completions.create({
+      const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
+      const completion = await client.chat.completions.create({
         model: 'gpt-4o-mini',
         temperature: 0.7,
         max_tokens: 500,
@@ -119,7 +112,8 @@ Respond ONLY with valid JSON in this exact format, no markdown or extra text:
         .map((a) => `Q: ${a.question}\nA: ${a.answer}`)
         .join('\n\n')
 
-      const completion = await openai.chat.completions.create({
+      const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
+      const completion = await client.chat.completions.create({
         model: 'gpt-4o-mini',
         temperature: 0.7,
         max_tokens: 1000,

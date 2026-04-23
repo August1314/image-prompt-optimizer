@@ -1,6 +1,19 @@
 # Image Prompt Optimizer
 
-A Vite + React + TypeScript application that helps transform rough image ideas into optimized prompts for AI image generators (Midjourney, DALL-E, Stable Diffusion, etc.).
+A `Vite + React + TypeScript` Web MVP that helps transform rough image ideas into clearer, safer, and more controllable prompts for AI image generators.
+
+## M1 Status
+
+This repository is currently accepted as the `M1` baseline: the engineering skeleton is runnable.
+
+`M1` means:
+
+- the app installs, builds, and runs locally
+- the UI exposes the core 3-step flow
+- the Vercel function shape exists and is wired into the app
+- local development can exercise the flow in a controlled way without requiring a real OpenAI API key
+
+`M1` does **not** mean the product is complete, production-ready, or fully validated with a real LLM provider.
 
 ## Features
 
@@ -8,20 +21,25 @@ A Vite + React + TypeScript application that helps transform rough image ideas i
 - Generates positive prompt, negative prompt, and model recommendations
 - Copy-to-clipboard for easy use in any AI image tool
 - Safety checks to refuse disallowed content
+- Local mock API support for deterministic development without a real API key
 
 ## Tech Stack
 
-- Vite + React + TypeScript
-- OpenAI API for prompt optimization
-- Vercel serverless functions for API
-- Deployed on Vercel
+- `Vite + React + TypeScript`
+- `Vercel Functions` via `api/optimize.ts`
+- Optional `OpenAI API` integration for real prompt optimization
+- Local mock middleware during `vite` development
 
 ## Getting Started
 
 ### Prerequisites
 
 - Node.js 18+
-- OpenAI API key
+- npm
+
+For local M1 development, `OPENAI_API_KEY` is optional because the Vite dev server mounts a deterministic mock `/api/optimize`.
+
+For real provider-backed verification or Vercel deployment, `OPENAI_API_KEY` is required.
 
 ### Installation
 
@@ -31,16 +49,19 @@ npm install
 
 ### Environment Setup
 
-Copy `.env.example` to `.env` and add your OpenAI API key:
+Copy `.env.example` to `.env`:
 
 ```bash
 cp .env.example .env
 ```
 
-Edit `.env`:
+If you want to test against the real OpenAI-backed API, set:
+
 ```
 OPENAI_API_KEY=sk-your-actual-key-here
 ```
+
+If you leave it empty during local `vite` development, the mock API will be used instead.
 
 ### Development
 
@@ -56,13 +77,23 @@ Open http://localhost:3000
 npm run build
 ```
 
+This produces the static client build in `dist/`. The repository does not treat build output as source of truth.
+
+### Tests
+
+```bash
+npm test -- --run
+```
+
 ### Deploy to Vercel
+
+`M1` does not require a production deployment. When you do want to validate the real hosted path:
 
 ```bash
 npx vercel --prod
 ```
 
-Or connect your GitHub repo to Vercel for automatic deployments.
+Before that, configure `OPENAI_API_KEY` in Vercel project settings.
 
 ## Project Structure
 
@@ -75,7 +106,9 @@ Or connect your GitHub repo to Vercel for automatic deployments.
 │   │   ├── ClarificationStep.tsx
 │   │   └── ResultStep.tsx
 │   ├── lib/
+│   │   ├── mock-api.ts
 │   │   ├── prompt-optimizer.ts
+│   │   ├── types.ts
 │   │   ├── safety.ts
 │   │   └── safety.server.ts
 │   ├── App.tsx
@@ -88,6 +121,37 @@ Or connect your GitHub repo to Vercel for automatic deployments.
 ├── vite.config.ts
 └── package.json
 ```
+
+## API Contract
+
+`POST /api/optimize`
+
+Request body:
+
+```json
+{
+  "prompt": "cinematic portrait of a violinist in heavy rain",
+  "answers": [
+    {
+      "question": "What visual style do you want?",
+      "answer": "dark editorial photography"
+    }
+  ]
+}
+```
+
+Response shape:
+
+```json
+{
+  "optimizedPrompt": "string",
+  "negativePrompt": "string",
+  "modelAdvice": "string",
+  "clarificationQuestions": ["string"]
+}
+```
+
+The wire shape above is part of the current M1 baseline and should stay stable until a later milestone explicitly changes it.
 
 ## Safety
 
