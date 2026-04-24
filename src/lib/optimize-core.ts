@@ -1,8 +1,8 @@
 import OpenAI from 'openai'
-import { runMockOptimizer } from './mock-optimizer'
-import { getProviderDefinition, getResolvedModel, isAIProvider, normalizeProviderConfig } from './providers'
-import { checkServerSafety } from './safety.server'
-import type { ClarificationAnswer, OptimizeRequestPayload, OptimizationResult, ProviderConfig } from './types'
+import { runMockOptimizer } from './mock-optimizer.js'
+import { getProviderDefinition, getResolvedModel, isAIProvider, normalizeProviderConfig } from './providers.js'
+import { checkServerSafety } from './safety.server.js'
+import type { ClarificationAnswer, OptimizeRequestPayload, OptimizationResult, ProviderConfig } from './types.js'
 
 type EnvironmentKeys = Partial<Record<'OPENAI_API_KEY' | 'GEMINI_API_KEY', string | undefined>>
 const AI_REQUEST_TIMEOUT_MS = 20_000

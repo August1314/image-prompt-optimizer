@@ -1,4 +1,4 @@
-import type { ClarificationAnswer, OptimizationResult } from './types'
+import type { ClarificationAnswer, OptimizationResult } from './types.js'
 
 /**
  * Deterministic mock optimizer for local development and fallback scenarios.

@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import type { VercelRequest, VercelResponse } from '@vercel/node'
-import handler from './create-session'
+import handler from '../../../api/checkout/create-session'
 
 const { mockCreate, mockStripeConstructor } = vi.hoisted(() => ({
   mockCreate: vi.fn(),
@@ -80,15 +80,15 @@ describe('api/checkout/create-session', () => {
     expect(mockStripeConstructor).toHaveBeenCalledWith('sk_test_123')
   })
 
-  it('returns a config error when required env is missing', async () => {
+  it('returns a friendly config error when required env is missing', async () => {
     delete process.env.STRIPE_PRICE_ID
     const { res, state } = createResponse()
 
     await handler(createRequest(), res)
 
-    expect(state.statusCode).toBe(500)
+    expect(state.statusCode).toBe(503)
     expect(state.jsonBody).toEqual({
-      error: 'Missing required environment variable: STRIPE_PRICE_ID',
+      error: 'Checkout is not configured yet. Please try again later.',
     })
   })
 })

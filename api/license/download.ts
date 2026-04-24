@@ -1,7 +1,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
-import { COMMERCE_PLAN_ID, COMMERCE_PRODUCT_NAME } from '../../src/lib/commerce'
-import { getLicenseSigningKey, retrieveCheckoutSession } from '../../src/lib/checkout-server'
-import { signLicenseDocument } from '../../src/lib/license-core'
+import { COMMERCE_PLAN_ID, COMMERCE_PRODUCT_NAME } from '../../src/lib/commerce.js'
+import { CheckoutConfigError, getLicenseSigningKey, retrieveCheckoutSession } from '../../src/lib/checkout-server.js'
+import { signLicenseDocument } from '../../src/lib/license-core.js'
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== 'GET') {
@@ -40,6 +40,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     res.setHeader('Content-Disposition', `attachment; filename="${COMMERCE_PRODUCT_NAME.replace(/\s+/g, '-')}-license.lic"`)
     return res.status(200).send(JSON.stringify(license, null, 2))
   } catch (error) {
+    if (error instanceof CheckoutConfigError) {
+      return res.status(503).json({ error: 'License delivery is not configured yet. Please contact support.' })
+    }
+
     const message = error instanceof Error ? error.message : 'Unable to generate license.'
     return res.status(500).json({ error: message })
   }

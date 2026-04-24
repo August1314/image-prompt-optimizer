@@ -1,10 +1,17 @@
 import Stripe from 'stripe'
-import { COMMERCE_PLAN_ID, COMMERCE_PRICE_LABEL, COMMERCE_PRODUCT_NAME } from './commerce'
+import { COMMERCE_PLAN_ID, COMMERCE_PRICE_LABEL, COMMERCE_PRODUCT_NAME } from './commerce.js'
+
+export class CheckoutConfigError extends Error {
+  constructor(message: string) {
+    super(message)
+    this.name = 'CheckoutConfigError'
+  }
+}
 
 function requireEnv(name: string, value?: string) {
   const trimmed = value?.trim()
   if (!trimmed) {
-    throw new Error(`Missing required environment variable: ${name}`)
+    throw new CheckoutConfigError(`Missing required environment variable: ${name}`)
   }
   return trimmed
 }

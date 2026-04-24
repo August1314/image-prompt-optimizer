@@ -6,6 +6,7 @@ import {
   COMMERCE_PRODUCT_NAME,
   COMMERCE_PURCHASE_BLURB,
 } from '../lib/commerce'
+import { readJsonSafely } from '../lib/http'
 
 export default function BuyPage() {
   const [isLoading, setIsLoading] = useState(false)
@@ -21,9 +22,13 @@ export default function BuyPage() {
         headers: {
           'Content-Type': 'application/json',
         },
+        body: JSON.stringify({}),
       })
 
-      const payload = (await response.json()) as { url?: string; error?: string }
+      const payload = await readJsonSafely<{ url?: string }>(
+        response,
+        'Checkout is temporarily unavailable right now. Please try again in a moment.',
+      )
       if (!response.ok || !payload.url) {
         throw new Error(payload.error || 'Unable to start checkout right now.')
       }

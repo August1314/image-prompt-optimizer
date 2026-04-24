@@ -1,4 +1,5 @@
 import type { ClarificationAnswer, OptimizationResult, ProviderConfig } from './types'
+import { readJsonSafely } from './http'
 
 const API_BASE = '/api'
 
@@ -16,9 +17,10 @@ export async function optimizePrompt(
   })
 
   if (!response.ok) {
-    const data = await response.json().catch(() => ({ error: 'Request failed.' }))
-    throw new Error(data.error || `Server error: ${response.status}`)
+    const data = await readJsonSafely<Record<string, unknown>>(response, 'Request failed.')
+    const message = typeof data.error === 'string' ? data.error : `Server error: ${response.status}`
+    throw new Error(message)
   }
 
-  return response.json()
+  return readJsonSafely<OptimizationResult>(response, 'Request failed.')
 }

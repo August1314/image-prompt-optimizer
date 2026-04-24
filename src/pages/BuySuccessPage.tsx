@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { COMMERCE_PRICE_LABEL, COMMERCE_PRODUCT_NAME } from '../lib/commerce'
+import { readJsonSafely } from '../lib/http'
 
 interface CheckoutSessionSummary {
   paymentStatus: string
@@ -27,7 +28,10 @@ export default function BuySuccessPage() {
 
       try {
         const response = await fetch(`/api/checkout/session?session_id=${encodeURIComponent(sessionId)}`)
-        const payload = (await response.json()) as CheckoutSessionSummary & { error?: string }
+        const payload = await readJsonSafely<CheckoutSessionSummary>(
+          response,
+          'Unable to verify checkout right now. Please reload this page in a moment.',
+        )
         if (!response.ok) {
           throw new Error(payload.error || 'Unable to verify checkout session.')
         }

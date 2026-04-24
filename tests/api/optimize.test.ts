@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import type { VercelRequest, VercelResponse } from '@vercel/node'
-import handler from './optimize'
+import handler from '../../api/optimize'
 
 const { mockCreate, mockOpenAIConstructor, MockAPIError } = vi.hoisted(() => {
   class MockAPIError extends Error {}

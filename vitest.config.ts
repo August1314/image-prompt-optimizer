@@ -7,7 +7,7 @@ export default defineConfig({
   test: {
     environment: 'jsdom',
     globals: true,
-    include: ['src/**/*.test.{ts,tsx}', 'api/**/*.test.{ts,tsx}', 'electron/**/*.test.{ts,tsx}', 'scripts/**/*.test.{ts,tsx}'],
+    include: ['src/**/*.test.{ts,tsx}', 'tests/**/*.test.{ts,tsx}', 'electron/**/*.test.{ts,tsx}', 'scripts/**/*.test.{ts,tsx}'],
     setupFiles: ['./vitest.setup.ts'],
   },
   resolve: {

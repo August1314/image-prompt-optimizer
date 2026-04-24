@@ -1,5 +1,5 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
-import { createCheckoutSession } from '../../src/lib/checkout-server'
+import { CheckoutConfigError, createCheckoutSession } from '../../src/lib/checkout-server.js'
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== 'POST') {
@@ -14,6 +14,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     return res.status(200).json({ url: session.url })
   } catch (error) {
+    if (error instanceof CheckoutConfigError) {
+      return res.status(503).json({ error: 'Checkout is not configured yet. Please try again later.' })
+    }
+
     const message = error instanceof Error ? error.message : 'Unable to create Stripe checkout session.'
     return res.status(500).json({ error: message })
   }

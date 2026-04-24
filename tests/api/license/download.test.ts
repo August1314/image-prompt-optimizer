@@ -1,8 +1,8 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { generateKeyPairSync } from 'crypto'
-import handler from './download'
-import { parseLicenseDocument, verifyLicenseDocument } from '../../src/lib/license-core'
+import handler from '../../../api/license/download'
+import { parseLicenseDocument, verifyLicenseDocument } from '../../../src/lib/license-core'
 
 const { mockRetrieve } = vi.hoisted(() => ({
   mockRetrieve: vi.fn(),

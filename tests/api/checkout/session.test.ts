@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import type { VercelRequest, VercelResponse } from '@vercel/node'
-import handler from './session'
+import handler from '../../../api/checkout/session'
 
 const { mockRetrieve } = vi.hoisted(() => ({
   mockRetrieve: vi.fn(),
