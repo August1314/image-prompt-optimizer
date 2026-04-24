@@ -2,18 +2,33 @@
   "name": "image-prompt-optimizer",
   "private": true,
   "version": "0.1.0",
+  "description": "Local-first prompt optimizer for AI image generation with web and macOS desktop runtimes.",
+  "author": "August1314",
   "type": "module",
+  "main": "dist-electron/main.cjs",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b tsconfig.app.json && vite build",
     "preview": "vite preview",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "typecheck:desktop": "tsc -p tsconfig.electron.json --noEmit",
+    "build:electron": "tsup --config tsup.electron.config.ts",
+    "build:desktop": "npm run build && npm run build:electron",
+    "dev:renderer": "vite",
+    "dev:electron": "tsup --config tsup.electron.config.ts --watch",
+    "dev:electron-run": "wait-on tcp:3000 file:dist-electron/main.cjs file:dist-electron/preload.cjs && ELECTRON_RENDERER_URL=http://127.0.0.1:3000 electronmon dist-electron/main.cjs",
+    "dev:desktop": "concurrently -k \"npm:dev:renderer\" \"npm:dev:electron\" \"npm:dev:electron-run\"",
+    "prepare:dmg-helper": "node scripts/prepare-dmg-helper.mjs",
+    "pack:desktop": "node scripts/pack-desktop.mjs",
+    "license:generate-dev": "node scripts/generate-dev-license.mjs"
   },
   "dependencies": {
     "openai": "^4.77.0",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "react-router-dom": "^7.14.2",
+    "stripe": "^22.1.0"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^6.9.1",
@@ -25,9 +40,34 @@
     "@vercel/node": "^3.0.0",
     "@vitejs/plugin-react": "^4.7.0",
     "@vitest/ui": "^4.1.5",
+    "concurrently": "^9.2.0",
+    "electron": "^35.2.1",
+    "electron-builder": "^26.0.12",
+    "electronmon": "^2.0.2",
     "jsdom": "^29.0.2",
+    "tsup": "^8.5.0",
     "typescript": "~5.7.2",
     "vite": "^6.0.0",
-    "vitest": "^4.1.5"
+    "vitest": "^4.1.5",
+    "wait-on": "^8.0.3"
+  },
+  "build": {
+    "appId": "com.august1314.image-prompt-optimizer",
+    "productName": "Image Prompt Optimizer",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "dist/**/*",
+      "dist-electron/**/*",
+      "package.json"
+    ],
+    "mac": {
+      "target": [
+        "dmg"
+      ],
+      "category": "public.app-category.graphics-design",
+      "artifactName": "ImagePromptOptimizer-${version}.${ext}"
+    }
   }
 }

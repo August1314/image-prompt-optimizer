@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { getProviderDefinition, isAIProvider } from '../lib/providers'
 import type { OptimizationResult } from '../lib/types'
 
 interface ModelBadge {
@@ -29,6 +30,9 @@ interface Props {
 function ResultStep({ result, onReset, onEditPrompt }: Props) {
   const [copiedField, setCopiedField] = useState<string | null>(null)
   const matchedBadges = parseModelBadges(result.modelAdvice)
+  const providerLabel = result._provider && isAIProvider(result._provider)
+    ? getProviderDefinition(result._provider).label
+    : null
 
   const copyToClipboard = async (text: string, field: string) => {
     try {
@@ -75,6 +79,16 @@ function ResultStep({ result, onReset, onEditPrompt }: Props) {
       <div className="success" style={{ marginBottom: '1.5rem' }}>
         Your optimized prompts are ready! Use them with your favorite AI image generator.
       </div>
+
+      {(providerLabel || result._model) && (
+        <div className="card" style={{ marginBottom: '1.5rem' }}>
+          <div className="card-header">Generation Context</div>
+          <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
+            {providerLabel && <span className="badge badge-accent">Provider: {providerLabel}</span>}
+            {result._model && <span className="badge">Model: {result._model}</span>}
+          </div>
+        </div>
+      )}
 
       {/* Model recommendation badges */}
       {matchedBadges.length > 0 && (

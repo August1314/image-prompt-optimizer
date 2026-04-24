@@ -3,7 +3,8 @@ import react from '@vitejs/plugin-react'
 import path from 'path'
 import { mockApiMiddleware } from './src/lib/mock-api'
 
-export default defineConfig({
+export default defineConfig(({ command }) => ({
+  base: command === 'build' ? './' : '/',
   plugins: [
     react(),
     {
@@ -24,4 +25,4 @@ export default defineConfig({
   build: {
     outDir: 'dist',
   },
-})
+}))

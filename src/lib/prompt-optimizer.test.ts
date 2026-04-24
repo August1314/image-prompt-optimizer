@@ -1,5 +1,12 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { optimizePrompt } from './prompt-optimizer'
+import type { ProviderConfig } from './types'
+
+const defaultProviderConfig: ProviderConfig = {
+  provider: 'openai',
+  apiKey: 'sk-local-test',
+  model: 'gpt-4o-mini',
+}
 
 describe('optimizePrompt', () => {
   beforeEach(() => {
@@ -19,12 +26,12 @@ describe('optimizePrompt', () => {
       json: () => Promise.resolve(mockResponse),
     }))
 
-    const result = await optimizePrompt('a sunset', [])
+    const result = await optimizePrompt('a sunset', [], defaultProviderConfig)
 
     expect(fetch).toHaveBeenCalledWith('/api/optimize', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ prompt: 'a sunset', answers: [] }),
+      body: JSON.stringify({ prompt: 'a sunset', answers: [], providerConfig: defaultProviderConfig }),
     })
     expect(result).toEqual(mockResponse)
   })
@@ -47,12 +54,12 @@ describe('optimizePrompt', () => {
       json: () => Promise.resolve(mockResponse),
     }))
 
-    const result = await optimizePrompt('a sunset', answers)
+    const result = await optimizePrompt('a sunset', answers, defaultProviderConfig)
 
     expect(fetch).toHaveBeenCalledWith('/api/optimize', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ prompt: 'a sunset', answers }),
+      body: JSON.stringify({ prompt: 'a sunset', answers, providerConfig: defaultProviderConfig }),
     })
     expect(result.optimizedPrompt).toBe('optimized prompt')
     expect(result.negativePrompt).toBe('blurry, low quality')
@@ -66,7 +73,7 @@ describe('optimizePrompt', () => {
       json: () => Promise.resolve({ error: 'Content policy violation' }),
     }))
 
-    await expect(optimizePrompt('bad input', [])).rejects.toThrow('Content policy violation')
+    await expect(optimizePrompt('bad input', [], defaultProviderConfig)).rejects.toThrow('Content policy violation')
   })
 
   it('should throw on non-ok response without JSON body', async () => {
@@ -77,7 +84,7 @@ describe('optimizePrompt', () => {
     }))
 
     // When JSON parsing fails, the catch fallback returns { error: 'Request failed.' }
-    await expect(optimizePrompt('test', [])).rejects.toThrow('Request failed.')
+    await expect(optimizePrompt('test', [], defaultProviderConfig)).rejects.toThrow('Request failed.')
   })
 
   it('should throw on non-ok response with JSON but no error field', async () => {
@@ -87,6 +94,6 @@ describe('optimizePrompt', () => {
       json: () => Promise.resolve({ detail: 'upstream timeout' }),
     }))
 
-    await expect(optimizePrompt('test', [])).rejects.toThrow('Server error: 502')
+    await expect(optimizePrompt('test', [], defaultProviderConfig)).rejects.toThrow('Server error: 502')
   })
 })

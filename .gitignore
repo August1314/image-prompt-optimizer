@@ -4,6 +4,8 @@ node_modules/
 # Build output
 dist/
 dist-ssr/
+dist-electron/
+release/
 
 # TypeScript build cache
 *.tsbuildinfo
@@ -31,3 +33,6 @@ Thumbs.db
 
 # Testing
 coverage/
+
+# Local desktop artifacts
+private/

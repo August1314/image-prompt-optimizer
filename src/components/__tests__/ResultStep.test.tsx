@@ -102,4 +102,27 @@ describe('ResultStep', () => {
     renderResultStep()
     expect(screen.queryByText('Mock Mode')).not.toBeInTheDocument()
   })
+
+  it('does not show mock mode notice for real provider responses', () => {
+    renderResultStep({
+      result: createResult({
+        _mock: undefined,
+        _notice: undefined,
+        modelAdvice: 'Best with Midjourney v6 and dramatic lighting tags.',
+      }),
+    })
+    expect(screen.queryByText('Mock Mode')).not.toBeInTheDocument()
+    expect(screen.getByText(/Best with Midjourney v6/)).toBeInTheDocument()
+  })
+
+  it('shows provider and model context when metadata is present', () => {
+    renderResultStep({
+      result: createResult({
+        _provider: 'gemini',
+        _model: 'gemini-2.5-flash',
+      }),
+    })
+    expect(screen.getByText(/Provider: Google Gemini/)).toBeInTheDocument()
+    expect(screen.getByText(/Model: gemini-2.5-flash/)).toBeInTheDocument()
+  })
 })
